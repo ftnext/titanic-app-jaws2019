@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>あなたがタイタニックに乗っていたら: {{ prediction }}</h1>
+<p>入力された情報</p>
+<ul>
+  <li>チケットクラス: {{ input_data.pclass }}</li>
+  <li>性別: {{ input_data.sex }}</li>
+  <li>年齢: {{ input_data.age }}歳</li>
+  <li>乗船した港: {{ input_data.embarked }}</li>
+</ul>
+<a href="{{ url_for('show_titanic_form') }}">入力フォームに戻る</a>
+{% endblock %}
