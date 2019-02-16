@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+<p>あなたがタイタニックに乗っていたら助かるでしょうか？</p>
+<P>フォームにあなたの情報を入力してください</p>
+<form action="{{ url_for('predict') }}" method=post>
+  <dl>
+    <dt>チケットクラス:
+    <dd><label><input type=radio name=pclass value=1 required>Upper
+        <label><input type=radio name=pclass value=2>Middle
+        <label><input type=radio name=pclass value=3>Lower
+    <dt>性別:
+    <dd><label><input type=radio name=sex value=male required>男性
+        <label><input type=radio name=sex value=female>女性
+    <dt>年齢:
+    <dd><input type=text size=5 name=age required>
+    <dt>乗船した港:
+    <dd><label><input type=radio name=embarked value=C required>Cherbourg
+        <label><input type=radio name=embarked value=Q>Queenstown
+        <label><input type=radio name=embarked value=S>Southampton
+    <dd><input type=submit value=送信>
+  </dl>
+</form>
+{% endblock %}
