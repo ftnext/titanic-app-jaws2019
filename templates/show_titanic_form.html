@@ -1,23 +1,57 @@
 {% extends "layout.html" %}
 {% block body %}
-<p>あなたがタイタニックに乗っていたら助かるでしょうか？</p>
 <P>フォームにあなたの情報を入力してください</p>
-<form action="{{ url_for('predict') }}" method=post>
-  <dl>
-    <dt>チケットクラス:
-    <dd><label><input type=radio name=pclass value=1 required>Upper
-        <label><input type=radio name=pclass value=2>Middle
-        <label><input type=radio name=pclass value=3>Lower
-    <dt>性別:
-    <dd><label><input type=radio name=sex value=male required>男性
-        <label><input type=radio name=sex value=female>女性
-    <dt>年齢:
-    <dd><input type=text size=5 name=age required>
-    <dt>乗船した港:
-    <dd><label><input type=radio name=embarked value=C required>Cherbourg
-        <label><input type=radio name=embarked value=Q>Queenstown
-        <label><input type=radio name=embarked value=S>Southampton
-    <dd><input type=submit value=送信>
-  </dl>
+<div class="col-md-4">
+<form action="{{ url_for('predict') }}" method=post class="needs-validation" novalidate>
+  <div class="d-block my-3">
+      <label for="input-pclass">チケットクラス</label>
+      <div class="custom-control custom-radio">
+        <input id="pclass-1" name="pclass" type="radio" value="1" class="custom-control-input" required>
+        <label class="custom-control-label" for="pclass-1">Upper</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input id="pclass-2" name="pclass" type="radio" value="2" class="custom-control-input" required>
+        <label class="custom-control-label" for="pclass-2">Middle</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input id="pclass-3" name="pclass" type="radio" value="3" class="custom-control-input" required>
+        <label class="custom-control-label" for="pclass-3">Lower</label>
+      </div>
+    </div>
+  <div class="d-block my-3">
+    <label for="input-sex">性別</label>
+    <div class="custom-control custom-radio">
+      <input id="sex-male" name="sex" type="radio" value="male" class="custom-control-input" required>
+      <label class="custom-control-label" for="sex-male">男性</label>
+    </div>
+    <div class="custom-control custom-radio">
+      <input id="sex-female" name="sex" type="radio" value="female" class="custom-control-input" required>
+      <label class="custom-control-label" for="sex-female">女性</label>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="input-age">年齢</label>
+    <input type="number" name="age" class="form-control" id="input-age" required>
+    <div class="invalid-feedback">
+      年齢を数値で入力してください
+    </div>
+  </div>
+  <div class="d-block my-3">
+    <label for="input-embarked">乗船した港</label>
+    <div class="custom-control custom-radio">
+      <input id="embarked-C" name="embarked" type="radio" value="C" class="custom-control-input" required>
+      <label class="custom-control-label" for="embarked-C">Cherbourg</label>
+    </div>
+    <div class="custom-control custom-radio">
+      <input id="embarked-Q" name="embarked" type="radio" value="Q" class="custom-control-input" required>
+      <label class="custom-control-label" for="embarked-Q">Queenstown</label>
+    </div>
+    <div class="custom-control custom-radio">
+      <input id="embarked-S" name="embarked" type="radio" value="S" class="custom-control-input" required>
+      <label class="custom-control-label" for="embarked-S">Southampton</label>
+    </div>
+  </div>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">送信</button>
 </form>
+</div>
 {% endblock %}
