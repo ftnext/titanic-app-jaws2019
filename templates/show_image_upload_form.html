@@ -1,11 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
+<p>あなたの顔写真から、タイタニック号で生き残るか死亡するか判定します。</p>
+<div class="col-md-4">
 <form action="{{ url_for('predict_by_image') }}" method=post enctype="multipart/form-data">
-  <dl>
-    <dt>画像をアップロード:
-    <dd><input type="file" name="img_file" required>
-    <dd><input type=submit value=送信>
-  </dl>
+  <div class="mb-4">
+    <label for="input-file">顔写真をアップロード</label>
+    <input type="file" name="img_file" class="form-control-file" id="input-file" required>
+  </div>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">送信</button>
 </form>
+</div>
 <a href="{{ url_for('show_titanic_form') }}">入力フォーム</a>
 {% endblock %}
