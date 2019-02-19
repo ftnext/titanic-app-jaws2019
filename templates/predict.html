@@ -8,5 +8,8 @@
   <li>年齢: {{ input_data.age }}歳</li>
   <li>乗船した港: {{ input_data.embarked }}</li>
 </ul>
+{% if img_url %}
+<img src="{{ img_url }}">
+{% endif %}
 <a href="{{ url_for('show_titanic_form') }}">入力フォームに戻る</a>
 {% endblock %}
