@@ -36,21 +36,31 @@ def show_image_upload_form():
     return render_template('show_image_upload_form.html')
 
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    input_data = request.form
-    record = {
+def convert_input(input_data):
+    """入力データをAmazon MLのAPIに送る形式に変換"""
+    return {
         'Age': input_data['age'],
         'Pclass': input_data['pclass'],
         'Sex': input_data['sex'],
         'Embarked': input_data['embarked']
     }
+
+
+def predict_by_amazonml(record):
+    """recordをAmazon MLのAPIに送り、予測結果を取得"""
     response = client.predict(
         MLModelId='ml-jw1JEypL3C9',
         Record=record,
         PredictEndpoint=AML_ENDPOINT
     )
-    predict_index = response['Prediction']['predictedLabel']
+    return response['Prediction']['predictedLabel']
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    input_data = request.form
+    record = convert_input(input_data)
+    predict_index = predict_by_amazonml(record)
     return render_template(
         'predict.html',
         prediction=PREDICTION[predict_index],
@@ -80,18 +90,8 @@ def predict_by_image():
             'sex': sex,
             'embarked': 'S'
         }
-        record = {
-            'Age': input_data['age'],
-            'Pclass': input_data['pclass'],
-            'Sex': input_data['sex'],
-            'Embarked': input_data['embarked']
-        }
-        response = client.predict(
-            MLModelId='ml-jw1JEypL3C9',
-            Record=record,
-            PredictEndpoint=AML_ENDPOINT
-        )
-        predict_index = response['Prediction']['predictedLabel']
+        record = convert_input(input_data)
+        predict_index = predict_by_amazonml(record)
         return render_template(
             'predict.html',
             prediction=PREDICTION[predict_index],
