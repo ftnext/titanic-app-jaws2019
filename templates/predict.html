@@ -1,15 +1,22 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>あなたがタイタニックに乗っていたら: {{ prediction }}</h1>
-<p>入力された情報</p>
-<ul>
-  <li>チケットクラス: {{ input_data.pclass }}</li>
-  <li>性別: {{ input_data.sex }}</li>
-  <li>年齢: {{ input_data.age }}歳</li>
-  <li>乗船した港: {{ input_data.embarked }}</li>
-</ul>
-{% if img_url %}
-<img src="{{ img_url }}">
-{% endif %}
-<a href="{{ url_for('show_titanic_form') }}">入力フォームに戻る</a>
+<div class="col-md-4">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title">あなたがタイタニックに乗っていたら: {{ prediction }}</h1>
+      <p class="card-text">入力された情報</p>
+      <ul class="list-unstyled">
+        <li>チケットクラス: {{ input_data.pclass }}</li>
+        <li>性別: {{ input_data.sex }}</li>
+        <li>年齢: {{ input_data.age }}歳</li>
+        <li>乗船した港: {{ input_data.embarked }}</li>
+      </ul>
+    </div>
+    {% if img_url %}
+      <img class="card-img-bottom" src="{{ img_url }}" alt="あなたの顔写真">
+    {% endif %}
+  </div>
+  <a class="btn btn-primary btn-lg btn-block mt-3" href="{{ url_for('show_titanic_form') }}">入力フォームに戻る</a>
+  <a class="btn btn-success btn-lg btn-block mb-3" href="{{ url_for('show_image_upload_form') }}">顔写真アップロードに戻る</a>
+</div>
 {% endblock %}

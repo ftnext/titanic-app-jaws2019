@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-<P>フォームにあなたの情報を入力してください</p>
+<p>フォームに入力された情報から、タイタニック号で生き残るか死亡するか判定します。</p>
 <div class="col-md-4">
 <form action="{{ url_for('predict') }}" method=post class="needs-validation" novalidate>
   <div class="d-block my-3">
@@ -51,7 +51,7 @@
       <label class="custom-control-label" for="embarked-S">Southampton</label>
     </div>
   </div>
-  <button class="btn btn-primary btn-lg btn-block" type="submit">送信</button>
+  <button class="btn btn-primary btn-lg btn-block mb-3" type="submit">送信</button>
 </form>
 </div>
 {% endblock %}
