@@ -114,47 +114,50 @@ def random_embarked():
 
 @app.route('/predict_by_image', methods=['POST'])
 def predict_by_image():
-    img_file = request.files['img_file']
-    if img_file and allowed_file(img_file.filename):
-        key = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-') \
-         + secure_filename(img_file.filename)
-        s3.upload_fileobj(img_file, BUCKET_NAME, key)
-        params = {'Bucket': BUCKET_NAME, 'Key': key}
-        img_url = s3.generate_presigned_url(
-            'get_object',
-            Params=params,
-            ExpiresIn=300
-        )
-        response = rek_client.detect_faces(
-            Image={
-                'S3Object': {
-                    'Bucket': BUCKET_NAME,
-                    'Name': key
-                }
-            },
-            Attributes=['ALL']
-        )
-        detected_face = response['FaceDetails'][0]
-        age_low = detected_face['AgeRange']['Low']
-        age_high = detected_face['AgeRange']['High']
-        age = (int(age_low) + int(age_high)) / 2
-        sex = detected_face['Gender']['Value'].lower()
-        input_data = {
-            'age': str(age),
-            'pclass': random_pclass(),
-            'sex': sex,
-            'embarked': random_embarked()
-        }
-        record = convert_input(input_data)
-        predict_index = predict_by_amazonml(record)
-        return render_template(
-            'predict.html',
-            prediction=PREDICTION[predict_index],
-            input_data=input_data,
-            img_url=img_url
-        )
-    else:
-        return "Fileのアップロードに失敗しました"
+    img_file = request.files.get('img_file')
+    if img_file is None:
+        abort(404, 'No image file')
+    if not allowed_file(img_file.filename):
+        abort(404, 'Unsupported image file type')
+
+    # img_fileが送信されており、pngやjpgファイルである場合
+    key = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-') \
+        + secure_filename(img_file.filename)
+    s3.upload_fileobj(img_file, BUCKET_NAME, key)
+    params = {'Bucket': BUCKET_NAME, 'Key': key}
+    img_url = s3.generate_presigned_url(
+        'get_object',
+        Params=params,
+        ExpiresIn=300
+    )
+    response = rek_client.detect_faces(
+        Image={
+            'S3Object': {
+                'Bucket': BUCKET_NAME,
+                'Name': key
+            }
+        },
+        Attributes=['ALL']
+    )
+    detected_face = response['FaceDetails'][0]
+    age_low = detected_face['AgeRange']['Low']
+    age_high = detected_face['AgeRange']['High']
+    age = (int(age_low) + int(age_high)) / 2
+    sex = detected_face['Gender']['Value'].lower()
+    input_data = {
+        'age': str(age),
+        'pclass': random_pclass(),
+        'sex': sex,
+        'embarked': random_embarked()
+    }
+    record = convert_input(input_data)
+    predict_index = predict_by_amazonml(record)
+    return render_template(
+        'predict.html',
+        prediction=PREDICTION[predict_index],
+        input_data=input_data,
+        img_url=img_url
+    )
 
 
 if __name__ == "__main__":
