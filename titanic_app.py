@@ -3,6 +3,7 @@ import random
 
 import boto3
 from flask import (
+    abort,
     Flask,
     render_template,
     request,
@@ -44,11 +45,19 @@ def show_image_upload_form():
 
 def convert_input(input_data):
     """入力データをAmazon MLのAPIに送る形式に変換"""
+    age = input_data.get('age')
+    pclass = input_data.get('pclass')
+    sex = input_data.get('sex')
+    embarked = input_data.get('embarked')
+    if (age is None) or (pclass is None) or \
+            (sex is None) or (embarked is None):
+        # age, pclass, sex, embarkedのいずれかが入力されていない場合
+        abort(404, 'In form, required item is not filled')
     return {
-        'Age': input_data['age'],
-        'Pclass': input_data['pclass'],
-        'Sex': input_data['sex'],
-        'Embarked': input_data['embarked']
+        'Age': age,
+        'Pclass': pclass,
+        'Sex': sex,
+        'Embarked': embarked
     }
 
 
