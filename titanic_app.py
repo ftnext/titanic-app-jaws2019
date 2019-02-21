@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 
 import boto3
 from flask import (
@@ -74,6 +75,34 @@ def predict():
     )
 
 
+def random_pclass():
+    """チケットクラス(文字列)をランダムに返すコード
+    クラス3が7割、クラス2が2割、クラス1が1割
+    """
+    rand = random.random()
+    if rand < 0.7:
+        pclass = 3
+    elif rand < 0.9:
+        pclass = 2
+    else:
+        pclass = 1
+    return str(pclass)
+
+
+def random_embarked():
+    """乗船港(文字列)をランダムに返すコード
+    Sから乗船が6割、Qから乗船が2割、Cから乗船が2割
+    """
+    rand = random.random()
+    if rand < 0.6:
+        embarked = 'S'
+    elif rand < 0.8:
+        embarked = 'Q'
+    else:
+        embarked = 'C'
+    return embarked
+
+
 @app.route('/predict_by_image', methods=['POST'])
 def predict_by_image():
     img_file = request.files['img_file']
@@ -103,9 +132,9 @@ def predict_by_image():
         sex = detected_face['Gender']['Value'].lower()
         input_data = {
             'age': str(age),
-            'pclass': '3',
+            'pclass': random_pclass(),
             'sex': sex,
-            'embarked': 'S'
+            'embarked': random_embarked()
         }
         record = convert_input(input_data)
         predict_index = predict_by_amazonml(record)
