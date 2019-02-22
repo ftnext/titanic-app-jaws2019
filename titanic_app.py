@@ -148,7 +148,7 @@ def predict_by_image():
     detected_face = response['FaceDetails'][0]
     age_low = detected_face['AgeRange']['Low']
     age_high = detected_face['AgeRange']['High']
-    age = (int(age_low) + int(age_high)) / 2
+    age = (int(age_low) + int(age_high)) // 2
     sex = detected_face['Gender']['Value'].lower()
     input_data = {
         'age': str(age),
