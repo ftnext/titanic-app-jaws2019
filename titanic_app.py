@@ -1,4 +1,6 @@
 from datetime import datetime
+import json
+import logging
 import random
 
 import boto3
@@ -20,6 +22,8 @@ app = Flask(__name__)
 client = boto3.client('machinelearning')
 rek_client = boto3.client('rekognition')
 s3 = boto3.client('s3')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def allowed_file(filename):
@@ -76,6 +80,7 @@ def predict():
     input_data = request.form
     record = convert_input(input_data)
     predict_index = predict_by_amazonml(record)
+    logger.info(f'{json.dumps(input_data)} : {PREDICTION[predict_index]}')
     return render_template(
         'predict.html',
         prediction=PREDICTION[predict_index],
@@ -118,6 +123,7 @@ def predict_by_image():
     if img_file is None:
         abort(404, 'No image file')
     if not allowed_file(img_file.filename):
+        logger.error(f'unsupported: {img_file.filename}')
         abort(404, 'Unsupported image file type')
 
     # img_fileが送信されており、pngやjpgファイルである場合
@@ -152,6 +158,7 @@ def predict_by_image():
     }
     record = convert_input(input_data)
     predict_index = predict_by_amazonml(record)
+    logger.info(f'{json.dumps(input_data)} : {PREDICTION[predict_index]}')
     return render_template(
         'predict.html',
         prediction=PREDICTION[predict_index],
